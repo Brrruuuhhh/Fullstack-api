@@ -1,0 +1,24 @@
+.container, .jumbotron {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+.container.home-books-list {
+  margin-top: 10px !important;
+}
+
+.home-books-list-margin {
+  margin-top: 10px;
+}
+
+.board-admin-margin,
+.board-moderator-margin,
+.board-user-margin {
+  margin-top: -85px;
+}
+
+.board-admin-margin-inner,
+.board-moderator-margin-inner,
+.board-user-margin-inner {
+  margin-top: -85px;
+}

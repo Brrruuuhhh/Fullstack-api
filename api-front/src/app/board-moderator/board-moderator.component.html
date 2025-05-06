@@ -1,0 +1,101 @@
+<div class="board-moderator-margin-inner">
+  <header class="jumbotron">
+  </header>
+
+  <ng-container *ngIf="isLoggedIn && isModerator">
+    <div class="row">
+      <div class="col-md-6">
+        <h4>Пользователи и их заказы</h4>
+        <div *ngFor="let user of usersWithOrders">
+          <b>{{ user.username }}</b> ({{ user.email }})
+          <ul *ngIf="user.orders.length > 0">
+            <li *ngFor="let order of user.orders">
+              <ng-container *ngIf="!orderEdit[order.id]">
+                Книга: {{ order.book?.title }} | Автор: {{ order.book?.author }} | Цена: {{ order.book?.price | currency }} | Дата заказа: {{ order.orderDate | date:'short' }}
+                <button class="btn btn-sm btn-warning ml-2" (click)="startEditOrder(order)">Редактировать</button>
+                <button class="btn btn-sm btn-danger ml-1" (click)="deleteOrder(order.id, user)">Удалить</button>
+              </ng-container>
+              <ng-container *ngIf="orderEdit[order.id]">
+                <select class="form-control d-inline w-auto" [(ngModel)]="orderEdit[order.id].bookId" name="editBookId-{{order.id}}">
+                  <option *ngFor="let b of books" [value]="b.id">{{ b.title }}</option>
+                </select>
+                <button class="btn btn-sm btn-primary ml-2" (click)="saveEditOrder(order, user)">Сохранить</button>
+                <button class="btn btn-sm btn-secondary ml-1" (click)="cancelEditOrder(order.id)">Отмена</button>
+              </ng-container>
+            </li>
+          </ul>
+          <div *ngIf="user.orders.length === 0">Нет заказов</div>
+          <div *ngIf="!orderAdd[user.id]">
+            <button class="btn btn-sm btn-success mt-2" (click)="startAddOrder(user.id)">Добавить заказ</button>
+          </div>
+          <div *ngIf="orderAdd[user.id]">
+            <select class="form-control d-inline w-auto" [(ngModel)]="orderAdd[user.id].bookId" name="addBookId-{{user.id}}">
+              <option [ngValue]="null">Выберите книгу</option>
+              <option *ngFor="let b of books" [value]="b.id">{{ b.title }}</option>
+            </select>
+            <button class="btn btn-sm btn-primary ml-2" (click)="saveAddOrder(user)" [disabled]="!orderAdd[user.id].bookId">Сохранить</button>
+            <button class="btn btn-sm btn-secondary ml-1" (click)="cancelAddOrder(user.id)">Отмена</button>
+          </div>
+          <hr>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h4>Список книг</h4>
+        <form class="mb-3" (ngSubmit)="addBook()" *ngIf="!isEditing">
+          <div class="form-row">
+            <div class="col">
+              <input type="text" class="form-control" placeholder="Название" [(ngModel)]="newBook.title" name="title" required>
+            </div>
+            <div class="col">
+              <input type="text" class="form-control" placeholder="Автор" [(ngModel)]="newBook.author" name="author" required>
+            </div>
+            <div class="col">
+              <input type="number" class="form-control" placeholder="Цена" [(ngModel)]="newBook.price" name="price" required>
+            </div>
+            <div class="col-auto">
+              <button class="btn btn-success" type="submit">Добавить</button>
+            </div>
+          </div>
+        </form>
+        <form class="mb-3" (ngSubmit)="updateBook()" *ngIf="isEditing">
+          <div class="form-row">
+            <div class="col">
+              <input type="text" class="form-control" placeholder="Название" [(ngModel)]="selectedBook.title" name="editTitle" required>
+            </div>
+            <div class="col">
+              <input type="text" class="form-control" placeholder="Автор" [(ngModel)]="selectedBook.author" name="editAuthor" required>
+            </div>
+            <div class="col">
+              <input type="number" class="form-control" placeholder="Цена" [(ngModel)]="selectedBook.price" name="editPrice" required>
+            </div>
+            <div class="col-auto">
+              <button class="btn btn-primary" type="submit">Сохранить</button>
+              <button class="btn btn-secondary" type="button" (click)="cancelEdit()">Отмена</button>
+            </div>
+          </div>
+        </form>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Название</th>
+              <th>Автор</th>
+              <th>Цена</th>
+              <th>Действия</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let book of books">
+              <td>{{ book.title }}</td>
+              <td>{{ book.author }}</td>
+              <td>{{ book.price | currency }}</td>
+              <td>
+                <button class="btn btn-sm btn-warning mr-2" (click)="editBook(book)">Редактировать</button>
+                <button class="btn btn-sm btn-danger" (click)="deleteBook(book.id)">Удалить</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+</div>

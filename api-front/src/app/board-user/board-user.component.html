@@ -1,0 +1,31 @@
+<div class="board-user-margin-inner">
+  <header class="jumbotron">
+  </header>
+
+  <ng-container *ngIf="isLoggedIn && isUser">
+    <div *ngIf="orders.length > 0">
+      <h4>Ваши заказы:</h4>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Название книги</th>
+            <th>Автор</th>
+            <th>Цена</th>
+            <th>Дата заказа</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of orders">
+            <td>{{ order.book?.title }}</td>
+            <td>{{ order.book?.author }}</td>
+            <td>{{ order.book?.price | currency }}</td>
+            <td>{{ order.orderDate | date:'short' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="orders.length === 0">
+      <p>У вас нет заказов.</p>
+    </div>
+  </ng-container>
+</div>
